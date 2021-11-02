@@ -1,0 +1,14 @@
+- hosts: servers
+  tasks:
+  - name: Update system
+    become: true
+    become_user: moshe
+    #sudo apt-get remove nodejs -y  &&  sudo apt-get remove npm -y
+    shell:      sudo apt update && sudo apt -y upgrade && sudo apt update
+
+  - name: Add Node.js APT Repository
+    shell:      sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
+  - name: Install Node.js 12
+    shell: sudo apt -y install nodejs
+  

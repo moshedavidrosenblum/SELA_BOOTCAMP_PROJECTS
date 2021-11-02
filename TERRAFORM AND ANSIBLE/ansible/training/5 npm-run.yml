@@ -1,0 +1,12 @@
+- hosts: all
+  tasks:
+  - name: init
+    become: true
+    become_user: moshe
+    #sudo apt-get remove nodejs -y  &&  sudo apt-get remove npm -y
+    shell:   npm --prefix  /home/moshe/bootcamp    init -y
+  - name: npm install
+    shell:   npm --prefix  /home/moshe/bootcamp  install 
+    
+  - name: run app 
+    shell:   npm --prefix  /home/moshe/bootcamp  run dev -d

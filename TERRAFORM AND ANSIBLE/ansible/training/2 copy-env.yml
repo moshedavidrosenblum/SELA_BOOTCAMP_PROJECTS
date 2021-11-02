@@ -1,0 +1,6 @@
+- hosts: all  
+  tasks:
+  - name: Ansible copy file to remote server
+    copy:
+      src: ./.env
+      dest: /home/moshe/bootcamp

@@ -1,0 +1,89 @@
+- hosts: servers
+  tasks:
+  - name: Update system
+    become: true
+    become_user: moshe
+    shell:      sudo apt update
+
+  - name: Add Node.js APT Repository
+    shell:      sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
+  - name: Install Node.js 12
+    shell: sudo apt -y install nodejs
+
+  - name: init 
+    shell:      npm --prefix  {{ path_to_app }}    init -y
+
+  - name: install dependencies
+    shell: npm --prefix   {{ path_to_app }}   install
+  
+ 
+  - name: Create .env for app
+    copy:
+       dest: /home/moshe/azagent/bootcamp-deploy/.env
+       content: |
+        # Host configuration
+        PORT=8080
+        HOST=0.0.0.0
+        NODE_ENV=development
+        HOST_URL=http://104.40.195.211:8080
+        COOKIE_ENCRYPT_PWD={{ cookie_encrypt_pwd }}
+        # Okta configuration
+        OKTA_ORG_URL=https://dev-22752799.okta.com
+        OKTA_CLIENT_ID={{ okta_client_id }}
+        OKTA_CLIENT_SECRET={{ okta_client_secret }}
+        # Postgres configuration
+        PGHOST={{ pghost }}
+        PGUSERNAME={{ pgusername }}
+        PGDATABASE=postgres
+        PGPASSWORD={{ pgpasword }}
+        PGPORT=5432
+
+
+- hosts: 10.0.1.4
+  tasks:
+  - name: init database
+    become: true
+    become_user: moshe
+    shell:   npm --prefix   {{ path_to_app }}   run initdb
+
+- hosts: 10.0.1.5
+  tasks:
+  - name: init database
+    become: true
+    become_user: moshe
+    shell:   npm --prefix   {{ path_to_app }}   run initdb
+
+
+
+  - name: run app in the backround
+    copy:
+      dest: "/etc/systemd/system/myapp.service"
+      content: |
+        [Unit]
+        Description=Nodejs application server
+        After=network.target
+        [Service]
+        WorkingDirectory=/home/moshe/azagent/bootcamp-deploy
+        ExecStart=/usr/bin/npm run dev
+        Type=simple
+        Restart=on-failure
+        RestartSec=10
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: daemon-reload
+    become: yes
+    command: "systemctl daemon-reload"
+
+  - name: enable myapp
+    become: yes
+    command: "systemctl enable myapp.service"
+
+  - name: start myapp
+    become: yes
+    command: "systemctl start myapp.service"
+
+
+#  ansible-playbook  main_with-vars.yml  --extra-vars "@vars.yml"
+

@@ -1,0 +1,20 @@
+az login
+
+terraform init
+
+terraform fmt 
+
+terraform validate
+
+terraform apply
+
+terraform refresh
+
+terraform console 
+
+terraform apply/destroy -auto-approve 
+
+run terraform comand  with vs code shell
+after installing actention
+ctrl + shif + p 
+serch for : open bash in cloud shell

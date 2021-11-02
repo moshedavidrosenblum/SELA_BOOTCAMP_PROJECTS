@@ -1,0 +1,16 @@
+                                                                                                    test.yml                                                                                                                 
+- hosts: 10.0.1.4
+  tasks:
+  - name: init
+    become: true
+    become_user: moshe
+    #sudo apt-get remove nodejs -y  &&  sudo apt-get remove npm -y
+    shell:   npm --prefix  /home/moshe/bootcamp   run initdb
+
+- hosts: 10.0.1.5
+  tasks:
+  - name: init
+    become: true
+    become_user: moshe
+    #sudo apt-get remove nodejs -y  &&  sudo apt-get remove npm -y
+    shell:   npm --prefix  /home/moshe/bootcamp   run initdb
