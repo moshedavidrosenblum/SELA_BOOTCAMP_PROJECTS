@@ -1,0 +1,105 @@
+
+trigger:
+- master
+- feature/*
+
+resources:
+- repo: self
+variables:
+  dockerRegistryServiceConnection: 'd3069103-f3df-4a2a-b5c1-ead8b45dfb05'
+  imageRepository: 'dockerazuredevopsimage'
+  containerRegistry: 'mosheacr.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: CI
+  #condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  jobs:
+  - job: BuildAndPushDocker
+    workspace: 
+     clean: all
+    pool:
+     vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+       command: buildAndPush
+       repository: $(imageRepository)
+       dockerfile: $(dockerfilePath)
+       containerRegistry: $(dockerRegistryServiceConnection)
+       tags: |
+        $(tag)
+
+ 
+#  Continuous Deployment Process for Staging Environment
+- stage: DeployToStaging
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: staging
+    displayName: Deploy to Staging
+    environment:
+     name: staging-vm
+     resourceType: VirtualMachine
+    strategy:
+     runOnce:
+      deploy:
+       steps:
+       - task: Docker@2
+         displayName: login to my registry in azure
+         inputs:
+          containerRegistry: $(dockerRegistryServiceConnection)
+          command: 'login'
+       - task: CmdLine@2
+         displayName: remove old images
+         inputs:
+          script : |
+           docker rm -f moshe || true
+           docker image prune -a -f   || true     
+       - task: CmdLine@2
+         displayName: pull and run image and send necessary enviorments
+         inputs:
+           script: docker run --restart=always -d --name moshe -p 8080:8080   -e PGHOST=$(PGHOST)   -e PORT=8080    -e  HOST=''0.0.0.0''  -e PGUSERNAME=$(PGUSRNAME)  -e PGDATABASE=postgres   -e  PGPASSWORD=$(PGPASSWORD)  -e  PGPORT=5432   -e HOST_URL=$(HOST_URL)   -e COOKIE_ENCRYPT_PWD=$(COOKIE_ENCRYPT_PWD)   -e  NODE_ENV=development   -e  OKTA_ORG_URL=$(OKTA_ORG_URL)   -e  OKTA_CLIENT_ID=$(OKTA_CLIENT_ID)   -e OKTA_CLIENT_SECRET=$(OKTA_CLIENT_SECRET)  $(containerRegistry)/$(imageRepository):$(tag)
+           
+
+  # Continuous Delivery Process for Production Environment
+- stage: DeployToProduction
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: production
+    displayName: Deploy to Production
+    environment:
+     name: production-vm
+     resourceType: VirtualMachine
+    strategy:
+     runOnce:
+      deploy:
+       steps:
+       - task: Docker@2
+         displayName: login to my acr
+         inputs:
+          containerRegistry: 'mosheACR'
+          command: 'login'
+                
+       - task: CmdLine@2
+         displayName: remove old images
+         inputs:
+          script : |
+           docker rm -f moshe || true
+           docker image prune -a -f   || true
+
+       - task: CmdLine@2
+         displayName:  run container of app and send envs
+         inputs:
+          script : docker run --restart=always -d --name moshe -p 8080:8080   -e PGHOST=$(production-pghost)   -e PORT=8080    -e  HOST=''0.0.0.0''  -e PGUSERNAME=$(production-pgusername)  -e PGDATABASE=postgres   -e  PGPASSWORD=$(PGPASSWORD)  -e  PGPORT=5432   -e HOST_URL=http://20.106.249.225:8080   -e COOKIE_ENCRYPT_PWD=$(COOKIE_ENCRYPT_PWD)   -e  NODE_ENV=development   -e  OKTA_ORG_URL=$(OKTA_ORG_URL)   -e  OKTA_CLIENT_ID=$(OKTA_CLIENT_ID)   -e OKTA_CLIENT_SECRET=$(OKTA_CLIENT_SECRET)  $(containerRegistry)/$(imageRepository):$(tag)
+
+    
+
+          
+          
+
+
+
