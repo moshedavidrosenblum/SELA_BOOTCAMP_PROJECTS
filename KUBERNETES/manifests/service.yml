@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: weighttracker
+    labels: 
+      app: weighttracker
+spec:
+    type: ClusterIP
+    ports:
+    - port: 80
+      targetPort: 8080
+    selector:
+        app: weighttracker
+
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#     name: myimagerepo
+# spec:
+#     type: LoadBalancer
+#     ports:
+#     - port: 8080 
+#     selector:
+#         app: myimagerepo

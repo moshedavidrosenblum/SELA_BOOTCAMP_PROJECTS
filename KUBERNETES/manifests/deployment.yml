@@ -1,0 +1,55 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: weighttracker 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: weighttracker
+  template:
+    metadata:
+      labels:
+        app: weighttracker 
+    spec:
+      containers:
+        - name: weighttracker 
+          image: mosheconregistry.azurecr.io/myrepo
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          envFrom:
+          - configMapRef: 
+             name: my-config-map.yml
+          - secretRef: 
+             name: my-secrets.yml
+
+
+
+
+# apiVersion : apps/v1
+# kind: Deployment
+# metadata:
+#   name: myimagerepo 
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: myimagerepo
+#   template:
+#     metadata:
+#       labels:
+#         app: myimagerepo 
+#     spec:
+#       containers:
+#         - name: myimagerepo 
+#           image: mosheconregistry.azurecr.io/myimagerepo
+#           ports:
+#           - containerPort: 8080
