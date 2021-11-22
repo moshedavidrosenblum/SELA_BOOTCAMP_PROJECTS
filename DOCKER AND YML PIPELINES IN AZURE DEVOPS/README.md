@@ -5,6 +5,6 @@
 - Once the change has been made it will make a trigger that will run the first stage . 
 - The first stage takes from the git  the dockerfile builds  the image and pushes it to the ACR. <br>
 **Once the first stage has been successfully completed the branch will make a pull request for the main brunch.** 
-### Only after the first stage has been successfully completed and the application is  approved it  will do  the other stages. 
-## The "DeployToStaging" stage will take from  ACR the image will build run and deploy the container that contains the application on the staging servers. 
-## The "deployToProduction" stagewill do the same thing on the production servers
+**Only after the first stage has been successfully completed and the application is  approved it  will do  the other stages** 
+**The "DeployToStaging" stage will take from  ACR the image will build run and deploy the container that contains the application on the staging servers.** 
+**The "deployToProduction" stagewill do the same thing on the production servers**
