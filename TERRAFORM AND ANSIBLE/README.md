@@ -1,4 +1,4 @@
-
+![](hashicorp-terraform-logo.jpg)
 #### This project has the infrastructure that will built in azure resource group that will contain 2 virtual machines.   load balancer that will go through the management of the machines.  when we install an application on the machines. 
 
 #### If we wont to see the application, we  go to the load balancer's IP and it will refer to the available machine. 
