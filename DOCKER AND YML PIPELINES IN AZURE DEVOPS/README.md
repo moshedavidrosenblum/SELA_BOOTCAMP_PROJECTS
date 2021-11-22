@@ -1,4 +1,4 @@
-![](docs/homepage-docker-logo.png)
+![](docs/docker-cover.png)
 ## The azure-pipelines.yml file will run the pipeline in azuredevops as follows:
 
 ### It  is not possible to make a change in the main brunch but first its needed to go to  the brunch  feature  and make a change there. 
