@@ -8,6 +8,10 @@
 - The modules/vm folder contains the structure of the virtual machines. 
 - Both the production environment and the staging environment use this folder, only when building the module for each  nvironment is given the appropriate size for the machine .
 - another file is needed in order to run rhe terraform, the file that contains 2 variables admin_password and  admin_username, thos files or not in git for security reson .
+
+![](training/ansible.jpg)
+
+
 ```diff
 - in the folder ansible is the plabook that is used to install all dependencies for the application 
 ```
