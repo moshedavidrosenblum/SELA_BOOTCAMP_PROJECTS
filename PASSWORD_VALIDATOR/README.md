@@ -1,5 +1,5 @@
 ![](pass.png)
-# password validator
+
 #####  this is code that checks if password contains Upper case, lower case, number, chars, digits and at least 10 characters . this code is  implemented in powershel and bash script.  "password-validator-passed-as-file.sh" is bash script validate password that is located in file
 
 ### To run bash scrip open bash terminal
