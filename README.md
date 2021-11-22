@@ -1,4 +1,4 @@
 ![](BOOTCAMP-APP/docs/bootcamp.jpg)
 
 
-# ALL_BOOTCAMP_PROJECTS
+# this are the projects from boot camp 2021 
