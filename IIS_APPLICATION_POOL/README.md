@@ -33,3 +33,5 @@ on sites folder right click -> add new site -> give site name -> path very impor
 ## step 11 
 stop application and web site (pause button) -> get pulished files that was created on my local pc to windows server (i used mount to send files from local pc to server) - > past those files in C:\inetpub\wwwroot\name_of_folder -> play on name of aplliaction pool and  name of web site -> browse web site on localhost:5100
 
+![](IIS_APPLICATION_POOL/Pages/microsoft.jpg)
+
