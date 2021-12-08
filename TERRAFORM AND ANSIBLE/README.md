@@ -13,7 +13,7 @@
 
 
 ```diff
-- in the folder ansible is the plabook that is used to install all dependencies for the application 
+in the folder ansible is the plabook that is used to install all dependencies for the application 
 ```
 
 ## - Installation
